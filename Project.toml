@@ -3,6 +3,15 @@ uuid = "91eb4510-ca62-4132-9379-68f62aa34118"
 authors = ["fgerick <felixgerick@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+ArnoldiMethod = "ec485272-7323-5ecc-a04f-4719b315124d"
+CartesianSphericalHarmonics = "76434f01-525d-4cbb-bcb9-3cdf14f74cfc"
+IncompleteLU = "40713840-3770-5561-ab4c-a76e7d0d7895"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+LinearMaps = "7a12625a-238d-50fd-b39a-03d52299707e"
+Mire = "fe462080-2232-11e9-3a2e-c30dbf578c75"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+
 [compat]
 julia = "1"
 
