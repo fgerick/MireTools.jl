@@ -11,5 +11,17 @@ using LinearMaps
 @reexport using Mire
 using Statistics
 
+
+
 include("eigen.jl")
+
+include("polynomialtools.jl")
+export truncpoly, truncvec, @fastfunc, @fastfuncr
+
+include("exteriorfield.jl")
+export exteriormagneticfields, bex, cleanexcess
+
+include("basistools.jl")
+export normbasis!
+
 end
