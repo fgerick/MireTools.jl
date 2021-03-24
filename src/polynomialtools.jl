@@ -42,3 +42,30 @@ macro fastfuncr(polynomial)
 		eval(Meta.parse(vars*" -> @fastmath "*polystr))
 	end
 end
+
+#some functions that help us convert the datatypes of the polynomial coefficients:
+function convert_polynom(S::Type{T},p) where T
+	c = coefficients(p)
+	m = monomials(p)
+	return sum(S.(c).*m)
+end
+
+convert_polyvec(S::Type{T},u) where T = convert_polynom.(S,u)
+
+#remove some large factor of polynomial vector with possible large coefficients
+function remove_factor!(u)
+	u./= maximum(abs.(coefficients(u[1]+u[2]+u[3])))
+end
+
+import Base.real
+function real(p::AbstractPolynomialLike)
+	c = coefficients(p)
+	m = monomials(p)
+	return dot(real.(c),m)
+end
+import Base.conj
+function conj(p::AbstractPolynomialLike)
+	c = coefficients(p)
+	m = monomials(p)
+	return dot(c,m)
+end

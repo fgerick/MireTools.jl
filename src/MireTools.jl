@@ -9,7 +9,9 @@ using IncompleteLU
 using LinearAlgebra
 using LinearMaps
 @reexport using Mire
+using MultivariatePolynomials
 using Statistics
+using TypedPolynomials
 
 
 
