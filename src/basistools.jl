@@ -11,14 +11,13 @@ function normbasis!(v::Vector{Mire.vptype{T1}},cmat::Array{T2,3}; n_cache=2*10^5
     return u
 end
 
-#remove some large factor of polynomial vector with possible large coefficients
-# function remove_factor!(u)
-# 	u./= maximum(abs.(Mire.coefficients(u[1]+u[2]+u[3])))
-# end
+function remove_factor!(u)
+	u./= maximum(abs.(Mire.coefficients(u[1]+u[2]+u[3])))
+end
 
 function normbasis!(P::T; n_cache=2*10^6) where T<:MHDProblem
     bs1 = P.bbasis.el
-    # map(remove_factor!,bs1)
+    map(remove_factor!,bs1)
     bs = normbasis!(bs1,P.cmat; n_cache)
     P.bbasis = typeof(P.bbasis)(P.N,P.V, bs, false)
 
