@@ -19,10 +19,10 @@ function normbasis!(P::T; n_cache=2*10^6) where T<:MHDProblem
     bs1 = P.bbasis.el
     map(remove_factor!,bs1)
     bs = normbasis!(bs1,P.cmat; n_cache)
-    P.bbasis = typeof(P.bbasis)(P.N,P.V, bs, false)
+    P.bbasis = typeof(P.bbasis)(P.N,P.V, bs, P.bbasis.orthonorm)
 
     vs = normbasis!(P.vbasis.el,P.cmat; n_cache)
-    P.vbasis = typeof(P.vbasis)(P.N,P.V, vs, false)
+    P.vbasis = typeof(P.vbasis)(P.N,P.V, vs, P.vbasis.orthonorm)
  
     return nothing
 end
