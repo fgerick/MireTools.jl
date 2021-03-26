@@ -1,11 +1,12 @@
 function normbasis!(v::Vector{Mire.vptype{T1}},cmat::Array{T2,3}; n_cache=2*10^5) where {T1,T2}
     T = promote_type(T1,T2)
-    ptemp = zeros(Mire.Term{T,Mire.Monomial{(x, y, z),3}},n_cache);
+    nt = Threads.nthreads()
+    ptemp = [zeros(Mire.Term{T,Mire.Monomial{(x, y, z),3}},n_cache) for i=1:nt]
     n = length(v)
     u = deepcopy(v)
     cm = T.(cmat)
-    for k=1:n
-        nrm=Mire.inner_product!(ptemp,u[k],u[k],cm)
+    Threads.@threads for k=1:n
+        nrm = Mire.inner_product!(ptemp[Threads.threadid()],u[k],u[k],cm)
         u[k]/=√nrm
     end
     return u
