@@ -26,4 +26,7 @@ export exteriormagneticfields, bex, cleanexcess
 include("basistools.jl")
 export normbasis!
 
+include("misc.jl")
+export ekinmag
+
 end
