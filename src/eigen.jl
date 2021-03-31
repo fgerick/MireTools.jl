@@ -62,8 +62,12 @@ function track(
             updateRHS!(RHS, p, c, c_old)
             c_old = c
         end
-
-        λ,u = eigstarget(RHS, LHS, target; v0 = utarget, kwargs...)
+        try
+            λ,u = eigstarget(RHS, LHS, target; v0 = utarget, kwargs...)
+        catch
+            @warn "arpack error, stopping at c = $c"
+            return λs,us,cout
+        end
         nev = length(λ)
 
         if k == 0
