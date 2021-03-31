@@ -87,7 +87,8 @@ function track(
                 end
                 dc /= 2
                 if abs(dc) <10eps()
-                    throw(Exception("abort tracking, stuck"))
+                    @warn "abort tracking, stuck"
+                    return λs,us,cout 
                 end
                 c_t = cout[end] + dc
                 continue
