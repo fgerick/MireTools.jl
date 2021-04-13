@@ -6,7 +6,7 @@ function normbasis!(v::Vector{Mire.vptype{T1}},cmat::Array{T2,3}; n_cache=2*10^5
     u = zeros(T,n)
     cm = T.(cmat)
     Threads.@threads for k=1:n
-        u[k] = sqrt(Mire.inner_product!(ptemp[Threads.threadid()],u[k],u[k],cm))
+        u[k] = sqrt(Mire.inner_product!(ptemp[Threads.threadid()],v[k],v[k],cm))
         v[k]/=u[k]
     end
     return u
