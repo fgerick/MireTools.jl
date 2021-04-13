@@ -20,7 +20,7 @@ function normbasis!(P::T; n_cache=2*10^6) where T<:MHDProblem
     bs1 = copy(P.bbasis.el)
     map(remove_factor!,bs1)
     normb = normbasis!(bs1,P.cmat; n_cache)
-    P.bbasis = typeof(P.bbasis)(P.N,P.V, bs, P.bbasis.orthonorm)
+    P.bbasis = typeof(P.bbasis)(P.N,P.V, bs1, P.bbasis.orthonorm)
 
     vs1 = copy(P.vbasis.el) 
     normu = normbasis!(vs1,P.cmat; n_cache)
