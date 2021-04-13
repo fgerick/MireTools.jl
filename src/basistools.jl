@@ -3,11 +3,11 @@ function normbasis!(v::Vector{Mire.vptype{T1}},cmat::Array{T2,3}; n_cache=2*10^5
     nt = Threads.nthreads()
     ptemp = [zeros(Mire.Term{T,Mire.Monomial{(x, y, z),3}},n_cache) for i=1:nt]
     n = length(v)
-    u = deepcopy(v)
+    u = zeros(T,n)
     cm = T.(cmat)
     Threads.@threads for k=1:n
-        nrm = Mire.inner_product!(ptemp[Threads.threadid()],u[k],u[k],cm)
-        u[k]/=√nrm
+        u[k] = sqrt(Mire.inner_product!(ptemp[Threads.threadid()],u[k],u[k],cm))
+        v[k]/=u[k]
     end
     return u
 end
@@ -17,13 +17,14 @@ end
 # end
 
 function normbasis!(P::T; n_cache=2*10^6) where T<:MHDProblem
-    bs1 = P.bbasis.el
+    bs1 = copy(P.bbasis.el)
     map(remove_factor!,bs1)
-    bs = normbasis!(bs1,P.cmat; n_cache)
+    normb = normbasis!(bs1,P.cmat; n_cache)
     P.bbasis = typeof(P.bbasis)(P.N,P.V, bs, P.bbasis.orthonorm)
 
-    vs = normbasis!(P.vbasis.el,P.cmat; n_cache)
-    P.vbasis = typeof(P.vbasis)(P.N,P.V, vs, P.vbasis.orthonorm)
+    vs1 = copy(P.vbasis.el) 
+    normu = normbasis!(vs1,P.cmat; n_cache)
+    P.vbasis = typeof(P.vbasis)(P.N,P.V, vs1, P.vbasis.orthonorm)
  
-    return nothing
+    return normu, normb
 end

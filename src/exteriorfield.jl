@@ -4,7 +4,7 @@ function gradIlm(l,m,x,y,z,r; kwargs...)
     [Mire.∂(rlmt,ξ)/r^(2l+1)-(2l+1)*ξ*rlmt/r^(2l+3) for ξ in [x,y,z]]
 end
 
-function bex(Plmn::AbstractVector{Complex{T}},ls,ms,ns) where T
+function bex(Plmn::AbstractVector{T},ls,ms,ns) where T
     R = Variable{:R}()
     b_ex = Plmn[1]*Mire.ve(ls[1],ns[1])*gradIlm(ls[1],ms[1],x,y,z,R; norm=Mire.Schmidt{T}())
     for i=2:length(Plmn)
