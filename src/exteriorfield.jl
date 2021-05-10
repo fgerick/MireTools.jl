@@ -18,18 +18,24 @@ function bex(Plmn::AbstractVector{T},ls,ms,ns) where T
 end
 
 
+
 function cleanexcess(p::RationalPoly)
     n = p.num
     d = p.den
     tn = terms(n)
     en = exponents.(tn)
     cn = coefficients(n)
-    R = Variable{:R}()
-    emax = exponent(monomial(tn[end]),R)
-    tnew = map((c,(l,i,j,k))->c*x^i*y^j*z^k*R^(l-emax), cn, en)
-    drest = R^(exponent(d,R)-emax)
-    return polynomial(tnew)/drest
+    if any(abs.(cn).>0.0)
+        R = Variable{:R}()
+        emax = exponent(monomial(tn[end]),R)
+        tnew = map((c,(l,i,j,k))->c*x^i*y^j*z^k*R^(l-emax), cn, en)
+        drest = R^(exponent(d,R)-emax)
+        return polynomial(tnew)/drest
+    else
+        return p
+    end
  end
+ 
  
 function exteriormagneticfields(bbasis,evec,ls,ms,ns)
     nb = length(bbasis)
