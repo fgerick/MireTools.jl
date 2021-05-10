@@ -10,11 +10,20 @@ using LinearAlgebra
 using LinearMaps
 @reexport using Mire
 using MultivariatePolynomials
+using PyCall
 using PyPlot
 using Statistics
 using TypedPolynomials
 
 
+
+const cartopy = PyNULL()
+
+function __init__()
+    copy!(cartopy, pyimport("cartopy"))
+end
+
+export cartopy
 
 include("eigen.jl")
 
