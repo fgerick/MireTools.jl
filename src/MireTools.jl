@@ -10,6 +10,7 @@ using LinearAlgebra
 using LinearMaps
 @reexport using Mire
 using MultivariatePolynomials
+using PyPlot
 using Statistics
 using TypedPolynomials
 
@@ -28,5 +29,7 @@ export normbasis!
 
 include("misc.jl")
 export ekinmag
+
+include("plotting.jl")
 
 end
