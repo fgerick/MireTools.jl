@@ -39,14 +39,12 @@ function ekinmag(u, nu, LHS)
         end
         ekin[iev]/=phase^2
         for (i,j,val) in zip(ib,jb,valb)
-            emag[iev]+=u[i,iev]*conj(u[j,iev])*val
+            emag[iev]+=u[i+nu,iev]*conj(u[j+nu,iev])*val
         end
         emag[iev]/=phase^2
     end 
-    return abs.(ekin),abs.(emag),abs.(ekin/emag)
+    return abs.(ekin),abs.(emag),abs.(ekin./emag)
 end
-
-
 
     
 

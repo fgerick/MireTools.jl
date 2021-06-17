@@ -21,17 +21,32 @@ function latlongrid(nlon,nlat,delta=0.0)
  
  # make surface velocity plot from polynomial vector field u, using streamlines and
  # uᵩ as colormap in background.
- function vel2surfaceplot(u,lons,lats,fig=figure();densityv=1.4,velfac=2.0, kwargs...)
+ function vel2surfaceplot(u,lons,lats,fig=figure(); densityv=1.4, velfac=2.0, normvelocity = 0, nlayers=30, kwargs...)
      uθ = map((phi,theta)->real(dot(u,[x*z,y*z,-x^2-y^2])(x=>cos(phi)*sin(theta),
          y=>sin(phi)*sin(theta),z=>cos(theta))/sin(theta)), lons,lats.+2eps().+pi/2)
      uϕ = map((phi,theta)->real(dot(u,[-y,x,0])(x=>cos(phi)*sin(theta),
          y=>sin(phi)*sin(theta),z=>cos(theta))/sin(theta)), lons,lats.+2eps().+pi/2)
-     ax = fig.add_subplot(1, 1, 1, projection=cartopy.crs.Mollweide())
+     ax = fig.add_subplot(1, 1, 1; projection=cartopy.crs.Mollweide())
      extr = maximum(abs.(uϕ))
      data = @. sqrt(uϕ^2+uθ^2)
+     if normvelocity>0
+        if normvelocity!=1
+            data/=normvelocity
+            uϕ/=normvelocity
+            uθ/=normvelocity
+            extr/=normvelocity
+        else
+            umax = maximum(abs.(data))
+            data/=umax
+            uϕ/=umax
+            uθ/=umax
+            extr/=umax
+        end
+     end
+
      ax.streamplot(lons*180/pi, lats*180/pi, uϕ.+eps(), uθ.+eps(),transform=cartopy.crs.PlateCarree(), density=densityv,linewidth=velfac*data/maximum(data), color="k")
  
-     c=ax.contourf(lons*180/pi, lats*180/pi, uϕ,30,
+     c=ax.contourf(lons*180/pi, lats*180/pi, uϕ,nlayers,
                 transform=cartopy.crs.PlateCarree(),
                 norm = PyPlot.matplotlib.colors.Normalize(vmin=-extr,vmax=extr); kwargs...)
  
@@ -61,14 +76,21 @@ function latlongrid(nlon,nlat,delta=0.0)
  end
  
  #plot radial magnetic field component with coastlines in the plot
- function br2surfaceplot(b,lons,lats,fig=figure();nlayers=40, kwargs...)
+ function br2surfaceplot(b,lons,lats,fig=figure();nlayers=40, normbr=false, kwargs...)
  
      br=dot(b,[x,y,z])
      bsurf = map((phi,theta)->real(br(x=>cos(phi)*sin(theta),
              y=>sin(phi)*sin(theta),z=>cos(theta))), lons,lats.+pi/2)
      extr=maximum(abs.(real.(bsurf)))
      ax = fig.add_subplot(1, 1, 1, projection=cartopy.crs.Mollweide())
- 
+    
+    if normbr
+        bmax=maximum(abs.(bsurf))
+        println(bmax)
+        bsurf/=bmax
+        extr/=bmax
+    end
+
      c=ax.contourf(lons*180/pi, lats*180/pi, bsurf,nlayers,
                 transform=cartopy.crs.PlateCarree(),
                 norm = PyPlot.matplotlib.colors.Normalize(vmin=-extr,vmax=extr); kwargs...)
