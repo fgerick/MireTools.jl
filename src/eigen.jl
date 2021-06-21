@@ -1,6 +1,6 @@
 function eigs(A::AbstractMatrix{T},B::AbstractMatrix{T}; kwargs...) where T
     P = ilu(B,τ=zero(real(T)))
-    LO = LinearMap{Complex{T}}(x->P\(A*x),size(A,2))
+    LO = LinearMap{complex(T)}(x->P\(A*x),size(A,2))
     pschur,history = partialschur(LO; kwargs...)
     λ, u = partialeigen(pschur)
     return λ,u
