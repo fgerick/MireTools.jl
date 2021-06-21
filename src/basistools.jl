@@ -18,7 +18,7 @@ function normbasis!(P::T; n_cache=2*10^6) where T<:MHDProblem
     bs1 = copy(P.bbasis.el)
     map(remove_factor!,bs1)
     nt = Threads.nthreads()
-    T3 = promote_type(T1,T2)
+    T3 = promote_type(eltype(P.cmat),coefficienttype(P.bbasis.el[1][1]),coefficienttype(P.vbasis.el[1][1]))
     ptemp = [zeros(Mire.Term{T3,Mire.Monomial{(x, y, z),3}},n_cache) for i=1:nt]
 
     normb = normbasis!(ptemp,bs1,P.cmat; n_cache)
