@@ -1,6 +1,7 @@
 function normbasis!(ptemp, v,cmat; n_cache=2*10^5)
     
     n = length(v)
+    T = coefficienttype(ptemp[1])
     u = zeros(T,n)
     # cm = T.(cmat)
     Threads.@threads for k=1:n
